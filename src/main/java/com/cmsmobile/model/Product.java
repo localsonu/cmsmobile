@@ -2,20 +2,16 @@ package com.cmsmobile.model;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@Data
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,11 +27,11 @@ public class Product {
     private String createdBy;
     @Column
     private String description;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category categories;
     @Column
     private Integer price;
+//
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "category_id")
+//    private Category category_id;
 
 }

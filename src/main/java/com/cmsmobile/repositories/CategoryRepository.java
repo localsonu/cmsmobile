@@ -9,5 +9,6 @@ import com.cmsmobile.model.Category;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
    List<Category> findByCategoryName(String categoryName);
+   Category findCategoryByCategoryName(String categoryName);
 
 }

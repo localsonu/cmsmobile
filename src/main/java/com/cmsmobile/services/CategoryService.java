@@ -3,6 +3,8 @@ package com.cmsmobile.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import com.cmsmobile.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +15,14 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public void addCategory(Category category) {
-        categoryRepository.save(category);
-    }
+    public Category addCategory(Category category) {
+        List<Category> catDb= categoryRepository.findByCategoryName(category.getCategoryName());
+       if(catDb.size() >0 )
+        throw new ProductNotFoundException();
+       else
+       return categoryRepository.save(category);
 
+    }
     public List<Category> getAllCategories() {
         List<Category> categoryList = new ArrayList<>();
         categoryRepository.findAll().forEach(categoryList::add);

@@ -1,40 +1,35 @@
 package com.cmsmobile.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
-public class Category {
+@Data
+public class Category implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "category_id", unique = true, nullable = false)
     private Long id;
     @Column(name = "category_name")
     private String categoryName;
-    @Column(name = "category_date")
+    @Column(name = "createddate")
     private Date createdDate;
-    @Column(name = "category_by")
+    @Column(name = "created_by")
     private String createdBy;
-
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "categories", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Product> products = new ArrayList<>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "cat_Id")
+    private List<Product> products;
 
 }

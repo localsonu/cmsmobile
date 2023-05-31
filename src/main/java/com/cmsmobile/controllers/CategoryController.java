@@ -16,15 +16,16 @@ import com.cmsmobile.model.Category;
 import com.cmsmobile.services.CategoryService;
 
 @RestController
+@RequestMapping("/api/v1")
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/category/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> addCategory(@RequestBody Category category) {
+    public ResponseEntity<Category> addCategory(@RequestBody Category category) {
         categoryService.addCategory(category);
-        return new ResponseEntity<>(true, HttpStatus.CREATED);
+        return new ResponseEntity<Category>(category, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/category/get/by/id/{categoryId}")
@@ -38,8 +39,13 @@ public class CategoryController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/all/category")
-    public List<Category> getCategories() {
-        return categoryService.getAllCategories();
+    public ResponseEntity<List<Category>> getCategories() {
+       // httpHeaders.setConnection(categoryService.getAllCategories().toString());
+        return new ResponseEntity<List<Category>>(categoryService.getAllCategories(), HttpStatus.OK);
 
+    }
+    @RequestMapping(method = RequestMethod.DELETE, value = "/category/{categoryId}")
+    public void deleteCategory(@PathVariable Long categoryId) {
+        categoryService.deleteCategory(categoryId);
     }
 }

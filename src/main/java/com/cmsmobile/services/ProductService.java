@@ -31,8 +31,8 @@ public class ProductService {
         return productList;
     }
 
-    public Optional<Product> getProductById(Long productId) {
-        Optional<Product> product = productRepository.findById(productId);
+    public Product getProductById(Long productId) {
+        Product product = productRepository.findById(productId).orElse(null);
         return product;
     }
 
@@ -42,5 +42,9 @@ public class ProductService {
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    public List<Product> getProductByCatId(Long categoryId) {
+        return productRepository.findProductByCategory_id(categoryId);
     }
 }

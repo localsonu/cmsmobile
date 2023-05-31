@@ -2,6 +2,7 @@ package com.cmsmobile.controllers;
 
 import java.util.List;
 
+import com.cmsmobile.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,17 +23,20 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @RequestMapping(method = RequestMethod.POST, value = "/product/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> addProduct(@RequestBody Product product) {
+    @RequestMapping(method = RequestMethod.POST, value = "/product/add", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> addProduct(@RequestBody Product product) {
         productService.addProduct(product);
-        return new ResponseEntity<Boolean>(true, HttpStatus.CREATED);
+        return new ResponseEntity<>(true, HttpStatus.CREATED);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/product/get/by/id/{productId}")
-    public void getProductById(@PathVariable Long productId) {
-        productService.getProductById(productId);
+    @RequestMapping(method = RequestMethod.GET, value = "/product/get/by/id/{productId}" ,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getProductById(@PathVariable Long productId) {
+        Product product = productService.getProductById(productId);
+        if (product != null)
+            return new ResponseEntity<>( product, HttpStatus.OK);
+        else
+        throw new ProductNotFoundException();
     }
-
     @RequestMapping(method = RequestMethod.GET, value = "/product/get/by/name/{productName}")
     public void getProductByName(@PathVariable String productName) {
         productService.getAllProductsByName(productName);
@@ -43,5 +47,17 @@ public class ProductController {
         return productService.getAllProducts();
 
     }
-    
+    @RequestMapping(method = RequestMethod.GET, value = "/product/category/{catId}" ,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getProductByCategoryId(@PathVariable Long catId) {
+        List<Product> product = productService.getProductByCatId(catId);
+        if (product != null)
+            return new ResponseEntity<>(product, HttpStatus.OK);
+        else
+            throw new ProductNotFoundException();
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/category/{productId}")
+    public void deleteProduct(@PathVariable Long productId) {
+        productService.deleteProduct(productId);
+    }
 }
